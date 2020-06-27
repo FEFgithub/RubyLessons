@@ -3,11 +3,11 @@ name = gets.chomp # убираем лишние символы (пробелы, 
 puts "Привет, #{name}!"
 
 unless 3 > 4
-    puts "false"
+  puts "false"
 end
 
 if !(3 > 4)
-    puts "false"
+  puts "false"
 end
 
 some_str = "dfdfsf"
