@@ -1,0 +1,11 @@
+1 == 1 # true
+1.object_id == 1.object_id # false 
+
+p "Hello!".gsub('!', '?') # "Hello?"
+p "Hello!".gsub'!', '?' # "Hello?"
+
+2 + 3 # 2.+(3)
+
+Kernel.puts "Hello" # puts "Hello"
+
+
