@@ -2,8 +2,8 @@
 # В цикле выводить те месяцы, у которых количество дней ровно 30
 puts '№1'
 hash_year2020 = { January: 31, February: 29, March: 31, April: 30, 
-  	        	    May: 31, June: 30, July: 31, August: 31, 
-  	        	    September: 30, October: 31, November: 30, December: 31 } 						
+                  May: 31, June: 30, July: 31, August: 31, 
+                  September: 30, October: 31, November: 30, December: 31 } 						
 hash_year2020.each { |i| print "#{i[0]} " if i[1] == 30 }
 puts "\n"
 
@@ -20,7 +20,7 @@ def num_fib(n)
   if n == 0
     0 
   elsif n == 1
-  	1
+    1
   else
     num_fib(n - 1) + num_fib(n - 2)
   end
