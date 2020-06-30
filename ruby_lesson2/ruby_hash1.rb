@@ -2,19 +2,14 @@
 # В цикле выводить те месяцы, у которых количество дней ровно 30
 puts '№1'
 hash_year2020 = { January: 31, February: 29, March: 31, April: 30, 
-  	        	  May: 31, June: 30, July: 31, August: 31, 
-  	        	  September: 30, October: 31, November: 30, December: 31 } 						
-for i in hash_year2020.to_a
-  print "#{i[0]} " if i[1] == 30   
-end
+  	        	    May: 31, June: 30, July: 31, August: 31, 
+  	        	    September: 30, October: 31, November: 30, December: 31 } 						
+hash_year2020.each { |i| print "#{i[0]} " if i[1] == 30 }
 puts "\n"
 
 # 2. Заполнить массив числами от 10 до 100 с шагом 5
 puts '№2'
-array1 = []
-for i in 10..100
-  array1.push(i) if i % 5 == 0 
-end
+array1 = (10..100).step(5).to_a
 print array1
 puts "\n"
 
@@ -31,7 +26,7 @@ def num_fib(n)
   end
 end
 
-for i in 0..100
+(0..100).to_a.each do |i|
   if num_fib(i) <= 100
     array2.push(num_fib(i))
   else
@@ -46,11 +41,10 @@ puts "\n"
 puts '№4'
 hash_abc = {}
 int_number = 1
-for i in 'a'..'z'
-  if i == 'a' || i == 'e' || i == 'i' || i == 'o' || i == 'u'
-    hash_abc[i] = int_number        
-  end
-  int_number += 1 
-end
+VOWEL = ['a', 'e', 'i', 'o', 'u'].freeze
+('a'..'z').each do |v| 
+  hash_abc[v] = int_number if VOWEL.include?(v)
+  int_number += 1
+end   
 print hash_abc
 puts "\n"

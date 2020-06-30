@@ -8,7 +8,7 @@ until title == 'стоп'
   price = Float(gets)
   print 'Введите количество товара: '
   number = Float(gets)
-  hash_all_title[title] = {price => number}
+  hash_all_title[title] = { price => number }
   puts 'Для выхода введите "стоп" в название товара'
   print 'Введите название товара: '
   title = gets.chomp 
@@ -18,9 +18,9 @@ print hash_all_title
 puts "\n"
 
 external_price = 0.0
-for i in hash_all_title
+hash_all_title.each do |i|
   inner_price = 0.0
-  for j in i[1].to_a
+  i[1].to_a.each do |j|
   	inner_price += j[0] * j[1]
   end
   puts "Стоимость #{i[0]} равна #{inner_price}"
