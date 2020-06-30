@@ -17,13 +17,9 @@ puts "\n"
 puts '№3'
 array2 = []
 def num_fib(n)
-  if n == 0
-    0 
-  elsif n == 1
-    1
-  else
-    num_fib(n - 1) + num_fib(n - 2)
-  end
+  return 0 if n.zero? 
+  return 1 if n == 1
+  num_fib(n - 1) + num_fib(n - 2)
 end
 
 (0..100).to_a.each do |i|
