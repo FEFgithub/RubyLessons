@@ -30,7 +30,7 @@ end
   if num_fib(i) <= 100
     array2.push(num_fib(i))
   else
-  	break
+    break
   end
 end
 print array2
