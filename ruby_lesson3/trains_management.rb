@@ -41,7 +41,7 @@ class Station
   end
 
   def train_out(some_train)
-    @trains_list_on_station - [some_train]
+    @trains_list_on_station -= [some_train]
     puts "Поезд номер #{some_train.train_number} отправился со станции #{@title_station} в #{@var_for_time.inspect}"
   end
 
@@ -85,7 +85,7 @@ class Route
   end
 
   def delete_inner_station(station)
-    @list_inner_stations - [station]
+    @list_inner_stations -= [station]
     puts "Станция #{station.title_station} удалена из маршрута"
   end
 
@@ -108,10 +108,13 @@ class Train
     @train_type = train_type
     @wagon_count = wagon_count
     @route = nil
+    @position_train = []
+    @train_road_list = []
+    @index_position = 0
   end  
 
   def train_stop
-    speed = 0
+    self.speed = 0
   end
 
   def add_wagon
@@ -124,31 +127,58 @@ class Train
 
   def set_route(route)
     @route = route
+    @index_position = 0
+    @train_road_list = [@route.first_station] + @route.list_inner_stations + [@route.last_station]
+    @position_train = [nil, @train_road_list[@index_position].title_station, 
+                      @train_road_list[@index_position + 1].title_station]
   end
 
   def move_forward
+    @index_position += 1
+    @position_train = [@train_road_list[@index_position - 1].title_station,
+                      @train_road_list[@index_position].title_station,
+                      @train_road_list[@index_position + 1].title_station] if @index_position + 1 < @train_road_list.size
+    if @position_train[1] == @train_road_list[-1].title_station
+      @position_train = [@train_road_list[-2].title_station,
+                        @train_road_list[-1].title_station,
+                        nil]
+    end                    
   end
 
   def move_back
+    @index_position -= 1
+    @position_train = [@train_road_list[@index_position + 1].title_station,
+                      @train_road_list[@index_position].title_station,
+                      @train_road_list[@index_position - 1].title_station] if @index_position + 1 < @train_road_list.size
+    if @position_train[1] == @train_road_list[0].title_station
+      @position_train = [@train_road_list[1].title_station,
+                        @train_road_list[0].title_station,
+                        nil]
+    end                    
   end
 
-  def get_information
-    puts "Предыдущая станция - #{}"
-    puts "Текущая станция - #{}"
-    puts "Следующая станция - #{}"
+  def get_information 
+    puts "Предыдущая станция - #{@position_train[0]}"
+    puts "Текущая станция - #{@position_train[1]}"
+    puts "Следующая станция - #{@position_train[2]}"
   end
 end
+
+# тестируем
 
 train1 = Train.new(1, 'пассажирский', 10)
 train2 = Train.new(2, 'пассажирский', 11)
 train3 = Train.new(3, 'грузовой', 20)
 train4 = Train.new(4, 'грузовой', 21)
 
-route = Route.new('Начальная', 'Конечная')
-
 station1 = Station.new('Станция1')
 station2 = Station.new('Станция2')
 station3 = Station.new('Станция3')
+station4 = Station.new('Станция4')
+station5 = Station.new('Станция5')
+station6 = Station.new('Станция6')
+
+route = Route.new(station1, station6)
 
 station1.train_in(train1)
 station1.train_in(train2)
@@ -160,4 +190,34 @@ station1.train_out(train2)
 station1.print_list_of_all_trains
 station1.print_list_of_special_trains
 
+route.print_all_stations
+route.add_inner_station(station2)
+route.add_inner_station(station3)
+route.add_inner_station(station4)
+route.add_inner_station(station5)
+route.print_all_stations
+route.delete_inner_station(station2)
+route.delete_inner_station(station4)
+route.print_all_stations
 
+train2.speed = 13
+puts train2.speed
+train2.train_stop
+puts train2.speed
+puts train2.wagon_count
+train2.add_wagon
+train2.add_wagon
+train2.add_wagon
+puts train2.wagon_count
+train2.delete_wagon
+puts train2.wagon_count
+train2.set_route(route)
+train2.get_information
+train2.move_forward
+train2.get_information
+train2.move_forward
+train2.get_information
+train2.move_back
+train2.get_information
+train2.move_back
+train2.get_information
