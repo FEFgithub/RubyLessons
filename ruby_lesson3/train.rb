@@ -27,22 +27,31 @@ class Train
   end
 
   def move_forward
-    @index_position += 1 if @index_position < @route.stations.size                   
+    if next_station
+      current_station.train_out(self)
+      @index_position += 1 if @index_position < @route.stations.size
+      current_station.train_in(self)
+    end
   end
 
   def move_back
-    @index_position -= 1 if @index_position > 0                     
+    if prev_station
+      current_station.train_out(self)
+      @index_position -= 1 if @index_position > 0
+      current_station.train_in(self)
+    end                  
   end
 
   def prev_station
-    @route.stations[@index_position - 1].title
+    @route.stations[@index_position - 1] if @index_position > 0
   end
 
-  def this_station
-    @route.stations[@index_position].title
+  def current_station
+    @route.stations[@index_position]
   end
 
   def next_station
-    @route.stations[@index_position + 1].title
+    @route.stations[@index_position + 1] 
   end
 end
+

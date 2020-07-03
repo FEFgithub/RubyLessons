@@ -76,14 +76,15 @@ puts train2.wagon_count
 train2.delete_wagon
 puts train2.wagon_count
 train2.set_route(route)
-puts train2.this_station
+puts train2.current_station
 train2.move_forward
-puts train2.this_station
+puts train2.current_station
 train2.move_forward
-puts train2.this_station
+puts train2.current_station
 train2.move_back
-puts train2.this_station
+puts train2.current_station
 train2.move_back
-puts train2.this_station
+puts train2.current_station
 
 route.stations.each { |st| p st.title }
+

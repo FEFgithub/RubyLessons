@@ -32,3 +32,4 @@ class Station
     puts "На станции #{@title} #{count_trains} поездов типа #{train_type}"
   end
 end
+
