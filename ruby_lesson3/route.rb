@@ -7,12 +7,12 @@ class Route
     @stations = []
   end  
 
-  def add_inner_station(station)
+  def add_station(station)
     @stations << station
     puts "Станция #{station.title} добавлена в маршрут"
   end
 
-  def delete_inner_station(station)
+  def delete_station(station)
     @stations -= [station]
     puts "Станция #{station.title} удалена из маршрута"
   end
@@ -22,5 +22,9 @@ class Route
     @stations.each { |station| @all_stations << station }
     @all_stations += [@last_station]
     @all_stations.each { |station| puts "Станция: #{station.title}" }
+  end
+
+  def stations
+    @all_stations
   end
 end

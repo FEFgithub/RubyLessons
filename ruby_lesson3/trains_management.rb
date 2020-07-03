@@ -55,13 +55,13 @@ station1.print_list_of_all_trains
 station1.print_list_of_special_trains("грузовой")
 
 route.print_all_stations
-route.add_inner_station(station2)
-route.add_inner_station(station3)
-route.add_inner_station(station4)
-route.add_inner_station(station5)
+route.add_station(station2)
+route.add_station(station3)
+route.add_station(station4)
+route.add_station(station5)
 route.print_all_stations
-route.delete_inner_station(station2)
-route.delete_inner_station(station4)
+route.delete_station(station2)
+route.delete_station(station4)
 route.print_all_stations
 
 train2.speed = 13
@@ -76,12 +76,14 @@ puts train2.wagon_count
 train2.delete_wagon
 puts train2.wagon_count
 train2.set_route(route)
-train2.get_information
+puts train2.this_station
 train2.move_forward
-train2.get_information
+puts train2.this_station
 train2.move_forward
-train2.get_information
+puts train2.this_station
 train2.move_back
-train2.get_information
+puts train2.this_station
 train2.move_back
-train2.get_information
+puts train2.this_station
+
+route.stations.each { |st| p st.title }
