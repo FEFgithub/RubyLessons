@@ -1,7 +1,7 @@
 class Route 
   # Нет private/protected методов, так как все методы 
   # входят в интерфейс пользователя 
-  attr_reader :first_station, :last_station, :stations
+  attr_reader :first_station, :last_station
 
   def initialize(first_station, last_station)
     @first_station = first_station
@@ -23,7 +23,7 @@ class Route
     @all_stations
   end
 
-  def print_stations
+  def print_all_stations
     @all_stations.each { |st| puts st.title }
   end
 end
