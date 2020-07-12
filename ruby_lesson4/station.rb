@@ -17,7 +17,7 @@ class Station
   end
 
   def print_list_of_all_trains
-    @trains.each { |train| puts "#{train.train_type} train  N#{train.number} on station" }
+    @trains.each { |train| puts "#{train.train_type} train  N#{train.number} on station #{self.title}" }
   end
 
   def print_list_of_special_trains(train_type)

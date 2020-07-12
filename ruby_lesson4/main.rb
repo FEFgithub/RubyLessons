@@ -29,217 +29,357 @@ require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 
 
+class Interface
+  def initialize
+    @stations = []
+    @trains = []
+    @routes = []
+  end
 
-def print_actions
-  puts 'Press: 
-        1 - for create station, 
-        2 - for create train, 
-        3 - for create route, 
-        31 - for add station in route,
-        32 - for delete station in route, 
-        4 - for set route on train, 
-        51 - for add wagon in train, 
-        52 - for delete wagon in train, 
-        61 - for move train in forward on the route, 
-        62 - for move train in back on the route, 
-        7 - for watch list all station and trains on the station,
-        0 - for exit.' 
-end
+  def print_actions
+    puts 'Press: 
+          1 - for create station, 
+          2 - for create train, 
+          3 - for create route, 
+          31 - for add station in route,
+          32 - for delete station in route, 
+          4 - for set route on train, 
+          51 - for add wagon in train, 
+          52 - for delete wagon in train, 
+          61 - for move train in forward on the route, 
+          62 - for move train in back on the route, 
+          7 - for watch list all station and trains on the station,
+          0 - for exit.' 
+  end
+
+  def print_stations
+    @stations.each.with_index(1) do |station, index|
+      puts "#{index} -- #{station.title}" 
+    end
+  end
   
-def get_action
-  gets.to_i
-end
-# default values
-$stations = [Station.new('first_st'), Station.new('lust_st')]
-$trains = [Train.new(1, 'cargo'), Train.new(2, 'passenger')]
-$routes = [Route.new(Station.new('first_st'), Station.new('lust_st'))]
+  def print_trains 
+    @trains.each.with_index(1) do |train, index|
+      puts "#{index} -- #{train.train_type} train N#{train.number}" 
+    end
+  end
+  
+  def print_routes
+    @routes.each.with_index(1) do |route, index|
+      puts "#{index} -- #{route}: #{route.first_station.title} - #{route.last_station.title}" 
+    end
+  end
 
-def print_stations
-  cout_stations = 1
-      $stations.each do |station|
-        puts "#{cout_stations} -- #{station.title}" 
-        cout_stations += 1
-      end
-end
+  def select_station
+    print_stations
+    index = Integer(gets) - 1
+    @stations[index]
+  end
 
-def prin_trains
-  cout_trains = 1
-      $trains.each do |train|
-        puts "#{cout_trains} -- #{train.train_type} train N#{train.number}" 
-        cout_trains += 1
-      end
-end
+  def select_train
+    print_trains
+    index = Integer(gets) - 1
+    @trains[index]
+  end
 
-def prin_routes
-  cout_routes = 1
-      $routes.each do |route|
-        puts "#{cout_routes} -- #{route}" 
-        cout_routes += 1
-      end
-end
+  def select_route
+    print_routes
+    index = Integer(gets) - 1
+    @routes[index]
+  end
 
-print_actions
-action = get_action
-while !action.zero?
-  case action
-    when 1 
+  def action_create_station
+    go_again = 1
+    while !go_again.zero?
+      puts 'List stations before change:'
+      print_stations
       puts 'Enter title for station'
       title = gets.chomp
-      $stations << Station.new(title)
+      @stations << Station.new(title)
+      puts 'List stations after change:'
       print_stations
-    when 2 
+      puts 'Create station again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_create_train
+    go_again = 1
+    while !go_again.zero?
+      puts 'List trains before change:'
+      print_trains
       puts 'Enter number for train'
       number = Integer(gets) 
       puts 'Enter train_type ("passenger" or "cargo") for train'
       train_type = gets.chomp 
-      if train_type == "passenger" || train_type == "cargo"
+      if train_type == 'passenger' || train_type == 'cargo'
         train = Train.new(number, train_type)
-        $trains << train
-        prin_trains
+        @trains << train
       else
         puts 'Enter correct train_type!'
       end
-    when 3  
-      print_stations
-      puts "Select from this list first station for your route"
-      first_index = Integer(gets)
-      puts "Select from this list last station for your route"
-      last_index = Integer(gets)
-      route = Route.new($stations[first_index - 1], $stations[last_index - 1])
-      $routes << route
-      puts "successfully created route: #{$routes.last.stations.each { |station| station.title }}"
-    when 31
-      prin_routes
-      puts "Select from this list route for add station"
-      route_index = Integer(gets)
-      print_stations
-      puts "Select from this list station for include in route N#{route_index}"
-      station_index = Integer(gets)
-      $routes[route_index - 1].add_station($stations[station_index - 1])
-      puts $routes[route_index - 1].print_stations
-    when 32
-      prin_routes
-      puts "Select from this list route for delete station"
-      route_index = Integer(gets)
-      print_stations
-      puts "Select from this list station for delete in route N#{route_index}"
-      station_index = Integer(gets)
-      $routes[route_index - 1].delete_station($stations[station_index - 1])
-      puts $routes[route_index - 1].print_stations
-    when 4
-      prin_routes
-      puts "Select from this list route for set route on train"
-      route_index = Integer(gets)
-      prin_trains
-      puts "Select from this list train, each will be given route"
-      train_index = Integer(gets)
-      $trains[train_index - 1].set_route($routes[route_index - 1])
-      puts "route #{$routes[route_index - 1]} set on train N#{$trains[train_index - 1].number}"  
-    when 51
+      puts 'List trains after change:'
+      print_trains
+      puts 'Create train again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_create_route
+    go_again = 1
+    while !go_again.zero?
+      puts 'List routes before change:'
+      print_routes
+      if @stations.size.zero?
+        puts 'Create minimum 2 stations!'
+      else
+        puts 'Select from this list first station'
+        first_station = select_station
+        puts 'Select from this list last station'
+        last_station = select_station
+        route = Route.new(first_station, last_station)
+        @routes << route
+      end
+      puts 'List routes after change:'
+      print_routes
+      puts 'Create route again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_add_station_in_route
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select route for add station'
+      route = select_route
+      puts 'Stations in this route before:'
+      route.print_all_stations
+      puts 'Select station'
+      station = select_station
+      if route.stations.include?(station)
+        puts 'Station already included in the route'
+      else 
+        route.add_station(station)
+      end
+      puts 'Stations in this route after:'
+      route.print_all_stations
+      puts 'Add station in route again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_delete_station_in_route
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select route for delete station'
+      route = select_route
+      puts 'Stations in this route before:'
+      route.print_all_stations
+      puts 'Select station'
+      station = select_station
+      if route.stations.size.zero?
+        puts 'Route do not have stations'
+        break
+      else 
+        route.delete_station(station)
+      end
+      puts 'Stations in this route after:'
+      route.print_all_stations
+      puts 'Delete station in route again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_set_route_on_train
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list route for set route on train'
+      route = select_route
+      puts 'Select from this list train, each will be given route'
+      train = select_train
+      train.set_route(route)
+      puts "route #{route} set on train N#{train.number}"  
+      puts 'Set route on train again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_add_wagon_in_train
+    go_again = 1
+    while !go_again.zero?
       puts "Write type wagon ('cargo' or 'passenger') for add"
       type_wagon = gets.chomp
-      prin_trains
-      puts "Select from this list train"
-      train_index = Integer(gets)
-      if type_wagon == $trains[train_index - 1].train_type
+      puts 'Select from this list train'
+      train = select_train
+      if train.train_type == type_wagon
+        puts "List wagons before: #{train.list_wagons}"
+        train.train_stop
         if type_wagon == 'cargo'
           cargo_w = CargoWagon.new
-          $trains[train_index - 1].train_stop
-          $trains[train_index - 1].add_wagon(cargo_w)
-          puts $trains[train_index - 1].list_wagons
+          train.add_wagon(cargo_w)
         elsif type_wagon == 'passenger'
           passenger_w = PassengerWagon.new
-          $trains[train_index - 1].train_stop
-          $trains[train_index - 1].add_wagon(passenger_w)
-          puts $trains[train_index - 1].list_wagons
-        else
-          puts "Enter correct type for wagon!"
+          train.add_wagon(passenger_w)
+        end  
+        puts "List wagons after: #{train.list_wagons}"
+      else
+        puts 'Type wagon and train is different!'
+      end
+      puts 'Add wagon in train again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_delete_wagon_in_train
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list train'
+      train = select_train
+      if train.list_wagons.size.zero?
+        puts 'Train do not have wagons!'
+        break
+      else
+        puts 'Select wagon for delete'
+        train.list_wagons.each.with_index(1) do |wag, index|
+          puts "#{index} -- #{wag} -- #{wag.type}"
         end
-      else
-        puts "type wagon and train is different!"
+        index_wagon = Integer(gets) - 1 
+        train.delete_wagon(train.list_wagons[index_wagon]) 
+        puts 'List wagons after deleted:'
+        train.list_wagons.each.with_index(1) do |wag, index|
+          puts "#{index} -- #{wag} -- #{wag.type}"
+        end
+        puts 'Delete wagon in train again? (yes - 1, no - 0)'
+        go_again = Integer(gets)
       end
-    when 52
-      prin_trains
-      puts "Select from this list train for delete wagon"
-      train_index = Integer(gets)
-      i_wag = 1
-      $trains[train_index - 1].list_wagons.each do |wag|
-        puts "#{i_wag} -- #{wag} -- #{wag.type}"
-        i_wag += 1
-      end
-      puts "Select from this list wagon for delete"
-      list_wagons_index = Integer(gets)
-      if $trains[train_index - 1].list_wagons[list_wagons_index - 1].type == $trains[train_index - 1].train_type
-        $trains[train_index - 1].train_stop
-        $trains[train_index - 1].delete_wagon($trains[train_index - 1].list_wagons[list_wagons_index - 1])
-        puts $trains[train_index - 1].list_wagons
-      else
-        puts "type wagon and train is different!"
-      end
-    when 61
-      prin_trains
-      puts "Select from this list train"
-      train_index = Integer(gets)
-      prin_routes
-      puts "Select from this list route"
-      route_index = Integer(gets)
-      $trains[train_index - 1].set_route($routes[route_index - 1])
+    end
+  end
+
+  def action_move_train_in_forward
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list train'
+      train = select_train
+      puts 'Select from this list route'
+      route = select_route
+      train.set_route(route)
       forward = 1
       while !forward.zero? 
-        puts "Prev station - #{$trains[train_index - 1].current_station.title}"
-        $trains[train_index - 1].move_forward
-        puts "Current station - #{$trains[train_index - 1].current_station.title}"
+        puts "Prev station - #{train.current_station.title}"
+        train.move_forward
+        puts "Current station - #{train.current_station.title}"
         puts "move forward again? (yes - 1, no - 0)"
         forward = Integer(gets)
       end
-    when 62
-      prin_trains
-      puts "Select from this list train"
-      train_index = Integer(gets)
-      prin_routes
-      puts "Select from this list route"
-      route_index = Integer(gets)
-      $trains[train_index - 1].set_route($routes[route_index - 1])
-      $trains[train_index - 1].index_position = $routes[route_index - 1].stations.size - 1
-      forward = 1
-      while !forward.zero? 
-        puts "Prev station - #{$trains[train_index - 1].current_station.title}"
-        $trains[train_index - 1].move_back
-        puts "Current station - #{$trains[train_index - 1].current_station.title}"
-        puts "move back again? (yes - 1, no - 0)"
-        forward = Integer(gets)
-      end
-    when 7
-      print_stations
-      puts 'Select from this list station for watch all train on her, add or delete train'
-      station_index = Integer(gets)
-      forward = 1
-      while !forward.zero?
-        if forward == 1 
-          prin_trains
-          puts "Select from this list train for add"
-          train_index = Integer(gets)
-          $stations[station_index - 1].train_in($trains[train_index - 1])
-          $stations[station_index - 1].print_list_of_all_trains
-          puts "again? (yes, add train - 1, yes, delete train - 2, no - 0)"
-          forward = Integer(gets)
-        elsif forward == 2
-          prin_trains
-          puts "Select from this list train for delete"
-          train_index = Integer(gets)
-          $stations[station_index - 1].train_out($trains[train_index - 1])
-          $stations[station_index - 1].print_list_of_all_trains
-          puts "again? (yes, add train - 1, yes, delete train - 2, no - 0)"
-          forward = Integer(gets)
-        else 
-          break
-        end
-      end
-    when 0 
-      break
-    else
-      puts 'Wrong! Enter correct number for action!'
+      puts 'Move other train again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
   end
-  print_actions
-  action = get_action
+
+  def action_move_train_in_back
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list train'
+      train = select_train
+      puts 'Select from this list route'
+      route = select_route
+      train.set_route(route)
+      train.index_position = route.stations.size - 1
+      back = 1
+      while !back.zero? 
+        puts "Prev station - #{train.current_station.title}"
+        train.move_back
+        puts "Current station - #{train.current_station.title}"
+        puts "move back again? (yes - 1, no - 0)"
+        back = Integer(gets)
+      end  
+      puts 'Move other train again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_add_delete_train_on_station
+    puts 'Select from this list station for watch all train on her, add or delete train'
+    station = select_station
+    go_again = 1
+    while !go_again.zero?
+      if go_again == 1
+        puts 'Select from this list train for add'
+        train = select_train
+        station.train_in(train)
+        station.print_list_of_all_trains
+        puts 'Again? (yes, add train - 1, yes, delete train - 2, no - 0)'
+        go_again = Integer(gets)
+      elsif go_again == 2
+        puts 'Select from this list train for delete'
+        train = select_train
+        station.train_out(train)
+        station.print_list_of_all_trains
+        puts 'Again? (yes, add train - 1, yes, delete train - 2, no - 0)'
+        go_again = Integer(gets)
+      end
+    end
+  end
+
+  def menu
+    puts 'Use templates for stations, trains and routes? (1 - yes, 0 - no)'
+    use_template = Integer(gets)
+    if use_template.zero?
+      puts 'All lists is empty'
+    else
+      station1 = Station.new('Station_test1')
+      station2 = Station.new('Station_test2')
+      station3 = Station.new('Station_test3')
+      @stations += [station1, station2, station3]
+      train1 = Train.new(1, 'passenger')
+      train2 = Train.new(2, 'cargo')
+      train3 = Train.new(3, 'passenger')
+      train4 = Train.new(4, 'cargo')
+      @trains += [train1, train2, train3, train4]
+      route1 = Route.new(station1, station2)
+      route2 = Route.new(station1, station3)
+      @routes += [route1, route2]
+      puts 'Templates successfully created:'
+      print_stations
+      print_trains
+      print_routes
+    end
+    print_actions
+    action = Integer(gets)
+    while !action.zero?
+      case action
+        when 1
+          action_create_station
+        when 2
+          action_create_train
+        when 3
+          action_create_route
+        when 31
+          action_add_station_in_route
+        when 32
+          action_delete_station_in_route
+        when 4
+          action_set_route_on_train
+        when 51
+          action_add_wagon_in_train
+        when 52
+          action_delete_wagon_in_train
+        when 61
+          action_move_train_in_forward
+        when 62
+          action_move_train_in_back
+        when 7
+          action_add_delete_train_on_station
+        when 0
+          break
+        else
+          puts 'Wrong! Enter correct number for action!'   
+      end
+      print_actions
+      action = Integer(gets)
+    end
+  end 
 end
+
+interface = Interface.new
+interface.menu
