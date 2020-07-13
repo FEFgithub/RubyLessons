@@ -57,6 +57,7 @@ class Interface
           12 - for set name company (train, wagon), 
           13 - for get all stations,
           14 - for get train by number,
+          15 - for get all trains and wagons,
           0 - for exit.' 
   end
 
@@ -385,6 +386,11 @@ class Interface
     end
   end
 
+  def action_get_all_trains_and_wagons
+    puts "Created cargo trains: #{CargoTrain.instances}, passenger trains: #{PassengerTrain.instances},
+        cargo wagons: #{CargoWagon.instances}, passenger wagons #{PassengerWagon.instances}."
+  end
+
   def menu
     puts 'Use templates for stations, trains and routes? (1 - yes, 0 - no)'
     use_template = Integer(gets)
@@ -440,6 +446,8 @@ class Interface
           action_get_all_stations
         when 14
           action_get_train_by_number
+        when 15 
+          action_get_all_trains_and_wagons
         when 0
           break
         else
@@ -448,7 +456,6 @@ class Interface
       print_actions
       action = Integer(gets)
     end
-    puts Train.instances
   end 
 end
 
