@@ -41,14 +41,14 @@ class Interface
           1 - for create station, 
           2 - for create train, 
           3 - for create route, 
-          31 - for add station in route,
-          32 - for delete station in route, 
-          4 - for set route on train, 
-          51 - for add wagon in train, 
-          52 - for delete wagon in train, 
-          61 - for move train in forward on the route, 
-          62 - for move train in back on the route, 
-          7 - for watch list all station and trains on the station,
+          4 - for add station in route,
+          5 - for delete station in route, 
+          6 - for set route on train, 
+          7 - for add wagon in train, 
+          8 - for delete wagon in train, 
+          9 - for move train in forward on the route, 
+          10 - for move train in back on the route, 
+          11 - for watch list all station and trains on the station,
           0 - for exit.' 
   end
 
@@ -112,9 +112,28 @@ class Interface
       number = Integer(gets) 
       puts 'Enter train_type ("passenger" or "cargo") for train'
       train_type = gets.chomp 
-      if train_type == 'passenger' || train_type == 'cargo'
-        train = Train.new(number, train_type)
-        @trains << train
+      puts 'Add wagon in train? (yes - 1, no - 0)'
+      add_wagon10 = Integer(gets)
+      if train_type == 'passenger'
+        if add_wagon10 == 1
+          train = PassengerTrain.new(number, 'passenger', PassengerWagon.new)
+          @trains << train
+        elsif add_wagon10 == 0
+          train = PassengerTrain.new(number)
+          @trains << train
+        else
+          puts 'Enter 1 or 0'
+        end 
+      elsif train_type == 'cargo'
+        if add_wagon10 == 1
+          train = CargoTrain.new(number, 'cargo', CargoWagon.new)
+          @trains << train
+        elsif add_wagon10 == 0
+          train = CargoTrain.new(number)
+          @trains << train
+        else
+          puts 'Enter 1 or 0'
+        end
       else
         puts 'Enter correct train_type!'
       end
@@ -331,10 +350,10 @@ class Interface
       station2 = Station.new('Station_test2')
       station3 = Station.new('Station_test3')
       @stations += [station1, station2, station3]
-      train1 = Train.new(1, 'passenger')
-      train2 = Train.new(2, 'cargo')
-      train3 = Train.new(3, 'passenger')
-      train4 = Train.new(4, 'cargo')
+      train1 = PassengerTrain.new(rand(100),'passenger', PassengerWagon.new)
+      train2 = CargoTrain.new(rand(100), 'cargo', CargoWagon.new)
+      train3 = PassengerTrain.new(rand(100),'passenger', PassengerWagon.new)
+      train4 = CargoTrain.new(rand(100), 'cargo', CargoWagon.new)
       @trains += [train1, train2, train3, train4]
       route1 = Route.new(station1, station2)
       route2 = Route.new(station1, station3)
@@ -354,21 +373,21 @@ class Interface
           action_create_train
         when 3
           action_create_route
-        when 31
-          action_add_station_in_route
-        when 32
-          action_delete_station_in_route
         when 4
+          action_add_station_in_route
+        when 5
+          action_delete_station_in_route
+        when 6
           action_set_route_on_train
-        when 51
-          action_add_wagon_in_train
-        when 52
-          action_delete_wagon_in_train
-        when 61
-          action_move_train_in_forward
-        when 62
-          action_move_train_in_back
         when 7
+          action_add_wagon_in_train
+        when 8
+          action_delete_wagon_in_train
+        when 9
+          action_move_train_in_forward
+        when 10
+          action_move_train_in_back
+        when 11
           action_add_delete_train_on_station
         when 0
           break

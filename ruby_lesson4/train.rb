@@ -1,14 +1,20 @@
 class Train
   # Нет private/protected методов, так как все методы 
   # входят в интерфейс пользователя 
-  attr_accessor :speed, :index_position
+  attr_accessor :speed, :index_position, :wagon
   attr_reader :number, :train_type, :list_wagons
 
-  def initialize(number, train_type)
+  def initialize(number, train_type, wagon)
     @number = number
     @train_type = train_type
     @index_position = 0
-    @list_wagons = []
+    @wagon = wagon
+    if @wagon.nil?
+      @list_wagons = []
+    else
+      @list_wagons = []
+      @list_wagons << @wagon
+    end
   end
 
   def train_stop
@@ -49,10 +55,12 @@ class Train
   end
 
   def add_wagon (wagon)
+    self.train_stop
     @list_wagons << wagon if @train_type == wagon.type && @speed.zero? 
   end
   
   def delete_wagon (wagon)
+    self.train_stop
     @list_wagons.delete(wagon) if @train_type == wagon.type && @speed.zero? 
   end
 end
