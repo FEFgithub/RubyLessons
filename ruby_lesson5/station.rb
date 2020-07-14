@@ -2,16 +2,16 @@ class Station
   # Нет private/protected методов, так как все методы 
   # входят в интерфейс пользователя 
   attr_reader :title, :trains
-  @@count_stations = 0
+  @@all_created_stations = []
 
   def initialize(title)
     @title = title
     @trains = []
-    @@count_stations += 1
+    @@all_created_stations.push(self)
   end
 
   def self.all
-    @@count_stations 
+    @@all_created_stations 
   end
   
   def train_in(some_train)

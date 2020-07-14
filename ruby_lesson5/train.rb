@@ -29,11 +29,7 @@ class Train
   end
 
   def self.find(number)
-    if @@hash_number_object.key?(number)
-      @@hash_number_object[number]
-    else
-      nil
-    end
+    @@hash_number_object[number]
   end
 
   def train_stop
