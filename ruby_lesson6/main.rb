@@ -122,13 +122,13 @@ class Interface
     while !go_again.zero?
       puts 'List trains before change:'
       print_trains
-      puts 'Enter number for train'
-      number = gets.chomp 
-      puts 'Enter train_type ("passenger" or "cargo") for train'
-      train_type = gets.chomp 
-      puts 'Add wagon in train? (yes - 1, no - 0)'
-      add_wagon10 = Integer(gets)
       begin
+        puts 'Enter number for train'
+        number = gets.chomp 
+        puts 'Enter train_type ("passenger" or "cargo") for train'
+        train_type = gets.chomp 
+        puts 'Add wagon in train? (yes - 1, no - 0)'
+        add_wagon10 = Integer(gets)
         if train_type == 'passenger'
           if add_wagon10 == 1
             train = PassengerTrain.new(number, 'passenger', PassengerWagon.new)
@@ -155,6 +155,7 @@ class Interface
         puts "#{train.train_type} train number #{train.number} created"
       rescue RuntimeError => e
         puts e.message
+        retry
       end
       puts 'List trains after change:'
       print_trains
