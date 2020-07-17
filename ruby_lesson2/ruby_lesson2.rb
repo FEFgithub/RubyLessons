@@ -53,9 +53,11 @@ h_hash.include? :a # true (только с ключами)
 
 h_hash.to_a
 
-# for # range
-# while # +
-# until # -
+=begin
+for # range
+while # +
+until # -
+=end
 
 # итераторы
 some_arr = [1, 3, 345, 323333]
