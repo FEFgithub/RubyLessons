@@ -1,29 +1,40 @@
 =begin
-1) Реализовать проверку (валидацию) данных для всех классов. 
-Проверять основные атрибуты (название, номер, тип и т.п.) на 
-наличие, длину и т.п. (в зависимости от атрибута):
-  - Валидация должна вызываться при создании объекта, если 
-  объект невалидный, то должно выбрасываться исключение
-  - Должен быть метод valid? который возвращает true, если 
-  объект валидный и false - в противном случае.
-2) Релизовать проверку на формат номера поезда. Допустимый 
-формат: три буквы или цифры в любом порядке, необязательный 
-дефис (может быть, а может нет) и еще 2 буквы или цифры после 
-дефиса.
-3) Убрать из классов все puts (кроме методов, которые и должны 
-что-то выводить на экран), методы просто возвращают значения. 
-(Начинаем бороться за чистоту кода).
-4) Релизовать простой текстовый интерфейс для создания поездов 
-(если у вас уже реализован интерфейс, то дополнить его):
-  - Программа запрашивает у пользователя данные для создания 
-  поезда (номер и другие необходимые атрибуты)
-  - Если атрибуты валидные, то выводим информацию о том, что 
-  создан такой-то поезд
-  - Если введенные данные невалидные, то программа должна 
-  вывести сообщение о возникших ошибках и заново запросить 
-  данные у пользователя. Реализовать это через механизм 
-  обработки исключений
+Для пассажирских вагонов:
+1) Добавить атрибут общего кол-ва мест (задается при создании 
+  вагона)
+2) Добавить метод, который "занимает места" в вагоне (по 
+  одному за раз)
+3) Добавить метод, который возвращает кол-во занятых мест в 
+вагоне
+4) Добавить метод, возвращающий кол-во свободных мест в вагоне.
+
+Для грузовых вагонов:
+1) Добавить атрибут общего объема (задается при создании вагона)
+2) Добавить метод, которые "занимает объем" в вагоне (объем 
+  указывается в качестве параметра метода)
+3) Добавить метод, который возвращает занятый объем
+4) Добавить метод, который возвращает оставшийся (доступный) 
+объем
+
+У класса Station:
+1) написать метод, который принимает блок и проходит по всем 
+поездам на станции, передавая каждый поезд в блок.
+
+У класса Train:
+1) написать метод, который принимает блок и проходит по всем 
+вагонам поезда (вагоны должны быть во внутреннем массиве), 
+передавая каждый объект вагона в блок.
+
+ Если у вас есть интерфейс, то добавить возможности:
+1) При создании вагона указывать кол-во мест или общий объем, 
+в зависимости от типа вагона
+2) Выводить список вагонов у поезда (в указанном выше формате), 
+используя созданные методы
+3) Выводить список поездов на станции (в указанном выше 
+  формате), используя  созданные методы
+4) Занимать место или объем в вагоне
 =end
+
 require_relative 'station'
 require_relative 'route'
 require_relative 'train'
@@ -52,11 +63,14 @@ class Interface
           8 - for delete wagon in train, 
           9 - for move train in forward on the route, 
           10 - for move train in back on the route, 
-          11 - for watch list all station and trains on the station,
+          11 - for add/delete train on station,
           12 - for set name company (train, wagon), 
           13 - for get all stations,
           14 - for get train by number,
           15 - for get all trains and wagons,
+          16 - for get list wagons in train,
+          17 - for get list trains in station,
+          18 - for add/delete place/volume in wagon,
           0 - for exit.' 
   end
 
@@ -254,10 +268,24 @@ class Interface
         puts "List wagons before: #{train.list_wagons}"
         train.train_stop
         if type_wagon == 'cargo'
-          cargo_w = CargoWagon.new
+          begin
+          puts 'Enter volume for wagon'
+          volume = Float(gets)
+          rescue Exception => e
+            puts e.message
+            retry
+          end
+          cargo_w = CargoWagon.new(volume)
           train.add_wagon(cargo_w)
         elsif type_wagon == 'passenger'
-          passenger_w = PassengerWagon.new
+          begin
+          puts 'Enter number free place for passengers'
+          places = Integer(gets)
+          rescue Exception => e
+            puts e.message
+            retry
+          end
+          passenger_w = PassengerWagon.new(places)
           train.add_wagon(passenger_w)
         end  
         puts "List wagons after: #{train.list_wagons}"
@@ -402,6 +430,72 @@ class Interface
         cargo wagons: #{CargoWagon.instances}, passenger wagons #{PassengerWagon.instances}."
   end
 
+  def action_get_list_wagons_in_train
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list train'
+      train = select_train
+      train.add_wagon_in_block do |wagon| 
+        puts "#{wagon.type} wagon, places - #{wagon.places}" if wagon.type == 'passenger'
+        puts "#{wagon.type} wagon, volume - #{wagon.volume}" if wagon.type == 'cargo' 
+      end
+      puts 'Get list wagons in train again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def action_get_list_trains_in_station
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list station'
+      station = select_station
+      station.add_train_in_block do |train| 
+        puts "#{train.train_type} train N#{train.number}" 
+      end
+      puts 'Get list trains in station again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
+  def select_wagon(train)
+    wagon_count = 1
+    train.add_wagon_in_block do |wagon| 
+        puts "#{wagon_count} - #{wagon.type} wagon, places - #{wagon.places}" if wagon.type == 'passenger'
+        puts "#{wagon_count} - #{wagon.type} wagon, volume - #{wagon.volume}" if wagon.type == 'cargo' 
+        wagon_count += 1
+      end
+    index = Integer(gets) - 1
+    train.list_wagons[index]
+  end
+
+  def action_add_delete_place_volume_in_wagon
+    go_again = 1
+    while !go_again.zero?
+      puts 'Select from this list train'
+      train = select_train
+      puts 'Select from this list wagon'
+      wagon = select_wagon(train)
+      if wagon.type == 'cargo'
+        puts "Free volume: #{wagon.volume}"
+        begin
+        puts 'Enter volume for add:'
+        volume = Float(gets)
+        rescue Exception => e
+          puts e.message
+          retry
+        end
+        wagon.close_volume(volume)
+        puts "Free volume: #{wagon.volume}"
+      else
+        puts "Free places before: #{wagon.places}"
+        wagon.close_place
+        puts "Free places after: #{wagon.places}"
+      end
+      puts 'Add/delete place/volume in wagon again? (yes - 1, no - 0)'
+      go_again = Integer(gets)
+    end
+  end
+
   def menu
     puts 'Use templates for stations, trains and routes? (1 - yes, 0 - no)'
     use_template = Integer(gets)
@@ -412,10 +506,10 @@ class Interface
       station2 = Station.new('Station_test2')
       station3 = Station.new('Station_test3')
       @stations += [station1, station2, station3]
-      train1 = PassengerTrain.new('111-11', 'passenger', PassengerWagon.new)
-      train2 = CargoTrain.new('222-22', 'cargo', CargoWagon.new)
-      train3 = PassengerTrain.new('333-33', 'passenger', PassengerWagon.new)
-      train4 = CargoTrain.new('444-44', 'cargo', CargoWagon.new)
+      train1 = PassengerTrain.new('111-11', 'passenger', PassengerWagon.new(20))
+      train2 = CargoTrain.new('222-22', 'cargo', CargoWagon.new(10))
+      train3 = PassengerTrain.new('333-33', 'passenger', PassengerWagon.new(20))
+      train4 = CargoTrain.new('444-44', 'cargo', CargoWagon.new(10))
       @trains += [train1, train2, train3, train4]
       route1 = Route.new(station1, station2)
       route2 = Route.new(station1, station3)
@@ -459,6 +553,12 @@ class Interface
           action_get_train_by_number
         when 15 
           action_get_all_trains_and_wagons
+        when 16
+          action_get_list_wagons_in_train
+        when 17
+          action_get_list_trains_in_station
+        when 18
+          action_add_delete_place_volume_in_wagon
         when 0
           break
         else

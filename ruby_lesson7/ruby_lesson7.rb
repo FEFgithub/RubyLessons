@@ -61,3 +61,6 @@ end
 
 m('str') { |str| puts str * 2 }
 m('str')
+
+block = ->(x, y) { puts x + y }
+block.call(12, 23)

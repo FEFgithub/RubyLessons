@@ -31,6 +31,10 @@ class Train
     validate!
   end
 
+  def add_wagon_in_block(&block)
+    list_wagons.each { |wagon| block.call(wagon) }
+  end
+
   def valid?
     validate!
     true
