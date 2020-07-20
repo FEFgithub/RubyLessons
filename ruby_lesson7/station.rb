@@ -11,7 +11,7 @@ class Station
     validate!
   end
 
-  def add_train_in_block(&block)
+  def each_train(&block)
     trains.each { |train| block.call(train) }
   end
 

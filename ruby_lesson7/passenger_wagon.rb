@@ -1,28 +1,11 @@
-class PassengerWagon
-  require_relative 'all_modules'
-  
-  include NameCompany
-  include InstanceCounter
-  
-  attr_reader :type
-  attr_accessor :places
+class PassengerWagon < Wagon
   
   def initialize(places)
     @type = 'passenger'
-    @places0 = places
-    @places = places
-    register_instance
+    super(places)
   end
 
-  def close_place
-    @places -= 1
-  end
-
-  def closed_places
-    @places0 - @places if @places0 >= @places
-  end
-
-  def free_places
-    @places
+  def close_some_place
+    super(1)
   end
 end
