@@ -1,0 +1,57 @@
+class Station
+  attr_reader :title, :trains
+
+  @@all_created_stations = []
+
+  def initialize(title)
+    @title = title
+    @trains = []
+    @@all_created_stations.push(self)
+    validate!
+  end
+
+  def each_train(&block)
+    trains.each { |train| block.call(train) }
+  end
+
+  def valid?
+    validate!
+    true
+  rescue StandardError
+    false
+  end
+
+  def self.all
+    @@all_created_stations
+  end
+
+  def train_in(some_train)
+    @trains << some_train
+  end
+
+  def train_out(some_train)
+    @trains -= [some_train]
+  end
+
+  def print_list_of_all_trains
+    @trains.each { |train| puts "#{train.train_type} train  N#{train.number} on station #{title}" }
+  end
+
+  def print_list_of_special_trains(train_type)
+    count_trains = 0
+    @trains.each do |train|
+      if train.train_type == train_type
+        puts train_type.to_s
+        count_trains += 1
+      end
+    end
+    puts "#{count_trains} - #{train_type}"
+  end
+
+  protected
+
+  def validate!
+    raise 'Title can not be nil!' if title.nil?
+    raise 'Title should be > 3 symbols!' if title.length < 3
+  end
+end
