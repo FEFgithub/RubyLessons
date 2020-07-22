@@ -116,7 +116,7 @@ module AllMainMethods
           if add_wagon10 == 1
             train = PassengerTrain.new(number, 'passenger', PassengerWagon.new(10))
             @trains << train
-          elsif add_wagon10 == 0
+          elsif add_wagon10.zero?
             train = PassengerTrain.new(number)
             @trains << train
           else
@@ -126,7 +126,7 @@ module AllMainMethods
           if add_wagon10 == 1
             train = CargoTrain.new(number, 'cargo', CargoWagon.new(10))
             @trains << train
-          elsif add_wagon10 == 0
+          elsif add_wagon10.zero?
             train = CargoTrain.new(number)
             @trains << train
           else
