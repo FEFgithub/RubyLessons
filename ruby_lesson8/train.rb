@@ -62,13 +62,13 @@ class Train
   def move_back
     if prev_station
       current_station.train_out(self)
-      @index_position -= 1 if @index_position > 0
+      @index_position -= 1 if @index_position.positive?
       current_station.train_in(self)
     end
   end
 
   def prev_station
-    @route.stations[@index_position - 1] if @index_position > 0
+    @route.stations[@index_position - 1] if @index_position.positive?
   end
 
   def current_station

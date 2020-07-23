@@ -240,7 +240,7 @@ module AllMainMethods
           begin
             puts 'Enter volume for wagon'
             volume = Float(gets)
-          rescue Exception => e
+          rescue StandardError => e
             puts e.message
             retry
           end
@@ -250,7 +250,7 @@ module AllMainMethods
           begin
             puts 'Enter number free place for passengers'
             places = Integer(gets)
-          rescue Exception => e
+          rescue StandardError => e
             puts e.message
             retry
           end
@@ -449,7 +449,7 @@ module AllMainMethods
         begin
           puts 'Enter volume for add:'
           volume = Float(gets)
-        rescue Exception => e
+        rescue StandardError => e
           puts e.message
           retry
         end
