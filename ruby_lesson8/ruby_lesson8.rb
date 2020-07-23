@@ -119,3 +119,4 @@ symb_arr = %i[sym1 sym2 sym3]
 p symb_arr
 
 # rubocop -a ./
+# .rubocop.yml
