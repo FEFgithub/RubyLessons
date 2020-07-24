@@ -34,12 +34,6 @@ Style/CommentedKeyword:
 Naming/MethodParameterName:
   Enabled: false
 
-Lint/DuplicateMethods:
-  Enabled: false
-
-Naming/PredicateName:
-  Enabled: false
-
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 

@@ -13,14 +13,14 @@ class Foo
 end
 
 class User
-  attr_accessor :name
+  attr_reader :name
 
-  def has_name?
+  def name?
     # name.nil? ? true : false
     !!name # двойное отрицание
   end
 
-  def has_not_name?
+  def not_name?
     !has_name?
   end
 
