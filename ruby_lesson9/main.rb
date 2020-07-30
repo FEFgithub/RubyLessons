@@ -78,6 +78,7 @@ require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 require_relative 'all_modules'
 
+
 class Interface
   include AllMainMethods
 
