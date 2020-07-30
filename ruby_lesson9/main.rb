@@ -81,7 +81,7 @@ require_relative 'all_modules'
 
 class Interface
   include AllMainMethods
-  include Acсessors
+  extend Acсessors
 
   attr_accessor_with_history :test1, :test2
   strong_attr_accessor :test3, 'str'.class 
@@ -172,8 +172,8 @@ interface.test1 = true
 interface.test2 = 'false'
 puts interface.test1
 p interface.test2
-# p interface.test1_history # не работает
-interface.test3 = true 
+p interface.test1_history # не работает
+interface.test3 = "true---" 
 p interface.test3
 
 
