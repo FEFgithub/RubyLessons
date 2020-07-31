@@ -81,10 +81,21 @@ require_relative 'all_modules'
 
 class Interface
   include AllMainMethods
-  extend Acсessors
+  extend Acсessors, Validation 
+  
 
   attr_accessor_with_history :test1, :test2
   strong_attr_accessor :test3, 'str'.class 
+
+  # validate 'sdf', :presence
+  # validate '', :presence
+  # validate nil, :presence
+
+  # validate '1512', :format, /^{5}$/
+  validate 'sdf-12', :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
+
+  #validate 'sdf', :type, Array
+  #validate 'sdf', :type, String
 
   def initialize
     @stations = []
@@ -172,8 +183,10 @@ interface.test1 = true
 interface.test2 = 'false'
 puts interface.test1
 p interface.test2
-p interface.test1_history # не работает
+p interface.test1_history 
 interface.test3 = "true---" 
 p interface.test3
 
+interface.validate!
+puts interface.valid?
 
