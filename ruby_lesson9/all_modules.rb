@@ -6,11 +6,13 @@ module Acсessors
       define_method(name) { instance_variable_get(my_var) }
       define_method("#{name}=".to_sym) do |value| 
         instance_variable_set(my_var, value)
+
+        self.class.define_method("#{name}_history") do
+          instance_variable_set(my_history_var, [])
+          instance_variable_get(my_history_var) << instance_variable_get(my_var) 
+        end
       end
-      define_method("#{name}_history") do
-        instance_variable_set(my_history_var, [])
-        instance_variable_get(my_history_var) << instance_variable_get(my_var) 
-      end
+      
     end
   end  
   
@@ -18,12 +20,9 @@ module Acсessors
     my_var = "@#{name_attr}".to_sym
     define_method(name_attr) { instance_variable_get(my_var) }
     define_method("#{name_attr}=".to_sym) do |value|
-      begin  
-        if value.class == class_attr 
-          instance_variable_set(my_var, value)
-        else
-          0 / 0 
-        end
+      begin   
+        instance_variable_set(my_var, value) if value.class == class_attr
+      raise if value.class != class_attr 
       rescue 
         puts "Class must be #{class_attr}"
       end
@@ -36,11 +35,12 @@ module Validation
     define_method(:validate!) do
       @type_error = nil  
       if type_attr == :presence
-        @type_error = 'Attr is nil or empty string!' if name_attr.nil? || name_attr == '' 
+        @type_error = 'Attr is nil or empty string!' if instance_variable_get("@#{name_attr}").nil? || 
+                                                        instance_variable_get("@#{name_attr}") == '' 
       elsif type_attr == :format
-        @type_error = 'Attr format do not correct!' if name_attr !~ args[0]
+        @type_error = 'Attr format do not correct!' if instance_variable_get("@#{name_attr}") !~ args[0]
       elsif type_attr == :type
-        @type_error = 'Attr type do not correct!' if name_attr.class != args[0]
+        @type_error = 'Attr type do not correct!' if instance_variable_get("@#{name_attr}").class != args[0]
       else
         puts 'Enter correct type_attr - :presence, :format, :type' 
       end
