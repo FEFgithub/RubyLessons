@@ -1,5 +1,6 @@
 class Train
-  require_relative 'all_modules'
+  require_relative 'name_company_module'
+  require_relative 'instance_counter_module'
 
   include NameCompany
   include InstanceCounter

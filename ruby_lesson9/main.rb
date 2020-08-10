@@ -77,10 +77,12 @@ require_relative 'cargo_train'
 require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 require_relative 'all_modules'
+require_relative 'acсessors_module'
+require_relative 'validation_module'
 
 
 class Interface
-  include AllMainMethods
+  include AllMainMethods, Acсessors, Validation
   extend Acсessors, Validation 
   
 
@@ -90,7 +92,7 @@ class Interface
 
   validate :test1, :presence
   # validate :test1, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
-  validate :test1, :type, String
+  # validate :test1, :type, String
 
   def initialize
     @stations = []
@@ -175,6 +177,8 @@ end
 interface = Interface.new
 interface.menu
 interface.test1 = 45
+interface.test1 = '45'
+interface.test1 = nil 
 interface.test2 = 'false'
 puts interface.test1
 p interface.test2
@@ -182,7 +186,6 @@ p interface.test1_history
 interface.test3 = "true---" 
 p interface.test3
 
+
 interface.validate!
 puts interface.valid?
-
-# p interface.instance_variables
