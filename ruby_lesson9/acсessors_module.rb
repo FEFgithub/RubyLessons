@@ -6,10 +6,12 @@ module Acсessors
       define_method(name) { instance_variable_get(my_var) }
       define_method("#{name}=".to_sym) do |value| 
         instance_variable_set(my_var, value)
+        instance_variable_set(my_history_var, [])
+        instance_variable_get(my_history_var) << instance_variable_get(my_var)
+        $all_var.push(value)
       end
       define_method("#{name}_history") do
-        instance_variable_set(my_history_var, [])
-        instance_variable_get(my_history_var) << instance_variable_get(my_var)  
+        instance_variable_get(my_history_var)
       end
     end
   end  

@@ -84,13 +84,11 @@ require_relative 'validation_module'
 class Interface
   include AllMainMethods, Acсessors, Validation
   extend Acсessors, Validation 
-  
 
-  attr_accessor_with_history :test1, :test2
-  strong_attr_accessor :test3, String 
+  attr_accessor_with_history :test1
+  strong_attr_accessor :test1, String 
 
-
-  validate :test1, :presence
+  # validate :test1, :presence
   # validate :test1, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
   # validate :test1, :type, String
 
@@ -176,16 +174,13 @@ end
 
 interface = Interface.new
 interface.menu
+
 interface.test1 = 45
 interface.test1 = '45'
-interface.test1 = nil 
-interface.test2 = 'false'
+interface.test1 = nil
+interface.test1 = 'nillll' 
 puts interface.test1
-p interface.test2
 p interface.test1_history 
-interface.test3 = "true---" 
-p interface.test3
-
 
 interface.validate!
 puts interface.valid?
