@@ -85,7 +85,7 @@ class Interface
   include AllMainMethods, Acсessors, Validation
   extend Acсessors, Validation 
 
-  attr_accessor_with_history :test1
+  attr_accessor_with_history :test1, :test2 
   strong_attr_accessor :test1, String 
 
   # validate :test1, :presence
@@ -182,5 +182,5 @@ interface.test1 = 'nillll'
 puts interface.test1
 p interface.test1_history 
 
-interface.validate!
-puts interface.valid?
+# interface.validate!
+# puts interface.valid?
