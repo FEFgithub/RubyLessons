@@ -175,11 +175,9 @@ end
 interface = Interface.new
 interface.menu
 
-interface.test1 = 45
-interface.test1 = '45'
-interface.test1 = nil
-interface.test1 = 'nillll' 
-puts interface.test1
+# interface.test1 = 45
+interface.test1= '45ffffff'
+p interface.test1
 p interface.test1_history 
 
 # interface.validate!
