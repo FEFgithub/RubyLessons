@@ -89,7 +89,7 @@ class Interface
   # strong_attr_accessor :test2, String 
 
   validate :test1, :presence
-  validate :test1, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
+  # validate :test1, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
   validate :test1, :type, String
 
   def initialize
@@ -176,7 +176,6 @@ interface = Interface.new
 interface.menu
 
 interface.test1 = 'nil-12'
-interface.test1 = 53
 interface.test2 = 'test12'
 interface.test2 = 'test22'
 interface.test2 = 'nil-12'

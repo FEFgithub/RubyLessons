@@ -13,15 +13,15 @@ module Validation
 
   module InstanceMethods
     def valid_presence(attr, *options)
-        @type_error[:presence] = 'Attr is nil or empty string!' if attr.nil? || attr == ''
+        raise if attr.nil? || attr == ''
     end
 
     def valid_format(attr, *options)
-        @type_error[:format] = 'Attr format do not correct!' if attr !~ options[0]
+        raise if attr !~ options[0]
     end 
 
     def valid_type(attr, *options)
-        @type_error[:type] = 'Attr type do not correct!' if attr.class != options[0]
+        raise if attr.class != options[0]
     end 
 
     def validate! 
@@ -37,7 +37,10 @@ module Validation
     end
 
     def valid?
-      instance_variable_get(:@type_error) == {} ? true : false
+      validate!
+      true
+    rescue
+      false
     end 
   end
 end
