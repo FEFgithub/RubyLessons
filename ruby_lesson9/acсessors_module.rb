@@ -1,21 +1,20 @@
 module Acсessors
   def attr_accessor_with_history(*names)
-    @all_histoty = []
     names.each do |name|
       my_var = "@#{name}".to_sym
-      # my_history_var = "@#{name}_history".to_sym
+      my_history_var = "@#{name}_history".to_sym
       define_method(name) { instance_variable_get(my_var) }
       define_method("#{name}=".to_sym) do |value| 
-        # instance_variable_set(my_var, value)
-        
-        # self.class.instance_variable_get(:@all_histoty) + [instance_variable_get(my_var)]
-        # p self.class.instance_variable_get(:@all_histoty)
-        # instance_variable_set(my_history_var, [])
-        # instance_variable_get(my_history_var) << instance_variable_get(my_var) 
+        instance_variable_set(my_var, value)
+        if instance_variable_get(my_history_var).nil?
+        	instance_variable_set(my_history_var, [])
+        	instance_variable_get(my_history_var) << instance_variable_get(my_var)
+        else 
+        	instance_variable_get(my_history_var) << instance_variable_get(my_var)
+        end 
       end
       define_method("#{name}_history") do
-        self.class.instance_variable_get(:@all_histoty)
-        # instance_variable_get(my_history_var)
+        instance_variable_get(my_history_var)
       end
     end
   end  

@@ -86,7 +86,7 @@ class Interface
   extend Acсessors, Validation 
 
   attr_accessor_with_history :test1, :test2 
-  strong_attr_accessor :test1, String 
+  # strong_attr_accessor :test1, String 
 
   # validate :test1, :presence
   # validate :test1, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
@@ -175,10 +175,14 @@ end
 interface = Interface.new
 interface.menu
 
-# interface.test1 = 45
-interface.test1= '45ffffff'
+interface.test1 = 45
+interface.test1 = 46
+interface.test1 = 'test1'
+interface.test2 = 'test12'
+interface.test2 = 'test22'
 p interface.test1
-p interface.test1_history 
+p interface.test1_history
+p interface.test2_history 
 
 # interface.validate!
 # puts interface.valid?
