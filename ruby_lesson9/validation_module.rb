@@ -5,31 +5,38 @@ module Validation
   end
 
   module ClassMethods
-    def validate(name_attr, type_attr, *args)
-      @var = 'test00001'  
+    def validate(name_attr, type_attr, *args)  
+      if @valid_arr.nil?
+        @valid_arr = []
+        @valid_arr << [name_attr, type_attr, args]
+      else
+        @valid_arr << [name_attr, type_attr, args]
+      end
     end
   end
 
   module InstanceMethods
-    def validate!
-      # @type_error = nil
-      # puts instance_variable_get(:@type_attr)  
-      # if instance_variable_get(:@type_attr) == :presence
-      #   @type_error = 'Attr is nil or empty string!' if instance_variable_get(:@name_attr).nil? || 
-      #                                                   instance_variable_get(:@name_attr) == '' 
-      # elsif instance_variable_get(:@type_attr) == :format
-      #   @type_error = 'Attr format do not correct!' if instance_variable_get(:@name_attr) !~ instance_variable_get(:@args)[0]
-      # elsif instance_variable_get(:@type_attr) == :type
-      #   @type_error = 'Attr type do not correct!' if instance_variable_get(:@name_attr).class != instance_variable_get(:@args)[0]
-      # else
-      #   puts 'Enter correct type_attr - :presence, :format, :type' 
-      # end
-      # puts @type_error if !@type_error.nil?
-      puts self.class.instance_variable_get(:@var)
+    def validate! 
+      @type_error = {}  
+      self.class.instance_variable_get(:@valid_arr).each do |valid_zero|
+        if valid_zero[1] == :presence
+          @type_error[:presence] = 'Attr is nil or empty string!' if eval(valid_zero[0].to_s).nil? ||
+                                                          eval(valid_zero[0].to_s) == ''
+        end
+        if valid_zero[1] == :format
+          @type_error[:format] = 'Attr format do not correct!' if eval(valid_zero[0].to_s) !~ eval(valid_zero[2].to_s)[0]
+        end
+        if valid_zero[1] == :type
+          @type_error[:type] = 'Attr type do not correct!' if eval(valid_zero[0].to_s).class != eval(valid_zero[2].to_s)[0] 
+        end
+      end
+      puts @type_error[:presence] if !@type_error[:presence].nil?
+      puts @type_error[:format] if !@type_error[:format].nil?
+      puts @type_error[:type] if !@type_error[:type].nil?
     end
 
     def valid?
-      instance_variable_get(:@type_error) ? false : true
+      instance_variable_get(:@type_error) == {} ? true : false
     end 
   end
 end

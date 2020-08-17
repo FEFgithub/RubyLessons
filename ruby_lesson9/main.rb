@@ -88,9 +88,9 @@ class Interface
   attr_accessor_with_history :test1, :test2 
   # strong_attr_accessor :test1, String 
 
-  # validate :test1, :presence
-  # validate :test1, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
-  # validate :test1, :type, String
+  validate :test2, :presence
+  validate :test2, :format, /^([a-zа-я]|\d){3}([-]|)([a-zа-я]|\d){2}$/i
+  validate :test2, :type, String
 
   def initialize
     @stations = []
@@ -178,11 +178,13 @@ interface.menu
 interface.test1 = 45
 interface.test1 = 46
 interface.test1 = 'test1'
-interface.test2 = 'test12'
+# interface.test2 = 'test12'
 interface.test2 = 'test22'
+interface.test2 = 'nil-12'
+interface.test2 = nil
 p interface.test1
 p interface.test1_history
 p interface.test2_history 
 
-# interface.validate!
-# puts interface.valid?
+interface.validate!
+puts interface.valid?
