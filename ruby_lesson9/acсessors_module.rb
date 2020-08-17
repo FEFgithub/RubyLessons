@@ -22,10 +22,8 @@ module Acсessors
     my_var = "@#{name_attr}".to_sym
     define_method(name_attr) { instance_variable_get(my_var) }
     define_method("#{name_attr}=".to_sym) do |value|
-      begin   
-        instance_variable_set(my_var, value) if value.class == class_attr
-      raise if value.class != class_attr 
-      end
+    	raise if value.class != class_attr
+      instance_variable_set(my_var, value) 
     end
   end
 end
