@@ -5,13 +5,12 @@ module Acсessors
       my_history_var = "@#{name}_history".to_sym
       define_method(name) { instance_variable_get(my_var) }
       define_method("#{name}=".to_sym) do |value| 
-        instance_variable_set(my_var, value)
         if instance_variable_get(my_history_var).nil?
         	instance_variable_set(my_history_var, [])
-        	instance_variable_get(my_history_var) << instance_variable_get(my_var)
         else 
         	instance_variable_get(my_history_var) << instance_variable_get(my_var)
         end 
+        instance_variable_set(my_var, value)
       end
       define_method("#{name}_history") do
         instance_variable_get(my_history_var)
@@ -26,8 +25,6 @@ module Acсessors
       begin   
         instance_variable_set(my_var, value) if value.class == class_attr
       raise if value.class != class_attr 
-      rescue 
-        puts "Class must be #{class_attr}"
       end
     end
   end
